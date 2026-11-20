@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Barangay Acevida Nutrition Management System</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f5f7fb;
+            color: #333;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            position: fixed;
+            width: 240px;
+            height: 100vh;
+            background: #1f7a4d;
+            color: white;
+            padding: 20px 15px;
+            overflow-y: auto;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo h2 {
+            font-size: 20px;
+        }
+
+        .logo p {
+            font-size: 12px;
+            margin-top: 5px;
+            opacity: .8;
+        }
+
+        .menu {
+            list-style: none;
+        }
+
+        .menu li {
+            margin: 8px 0;
+        }
+
+        .menu a {
+            display: block;
+            padding: 12px 15px;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .menu a:hover,
+        .menu a.active {
+            background: #155c3a;
+        }
+
+        /* MAIN */
+        .main {
+            margin-left: 240px;
+            padding: 25px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .topbar h1 {
+            font-size: 23px;
+        }
+
+        .topbar-info {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .info-box {
+            background: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, .08);
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .weather-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .weather-icon {
+            font-size: 20px;
+        }
+
+        .user {
+            background: #ffe87c;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        /* PAGES */
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* DASHBOARD CARDS */
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, .08);
+        }
+
+        .card h3 {
+            font-size: 14px;
+            color: #777;
+        }
+
+        .card p {
+            font-size: 28px;
+            font-weight: bold;
+            margin-top: 8px;
+            color: #1f7a4d;
+        }
+
+        /* CONTENT BOX */
+        .box {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, .08);
+        }
+
+        .box h2 {
+            margin-bottom: 15px;
+        }
+
+        /* TABLE */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+            text-align: left;
+        }
+
+        th {
+            background: #f0f5f2;
+        }
+
+        /* BUTTONS */
+        button {
+            border: none;
+            padding: 10px 15px;
+            border-radius: 7px;
+            cursor: pointer;
+            background: #1f7a4d;
+            color: white;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background: #155c3a;
+        }
+
+        .btn-danger {
+            background: #d9534f;
+        }
+
+        .btn-danger:hover {
+            background: #c9302c;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        /* FORM */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #ddd;
+            border-radius: 7px;
+        }
+
+        .form-buttons {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        /* STATUS BADGES */
+        .status {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            display: inline-block;
+        }
+
+        .normal {
+            background: #d9f5df;
+            color: #217a38;
+        }
+
+        .underweight {
+            background: #fff0c7;
+            color: #946c00;
+        }
+
+        .stunted {
+            background: #ffdede;
+            color: #a32929;
+        }
+
+        .wasted {
+            background: #e2d5f8;
+            color: #58258b;
+        }
+
+        .overweight {
+            background: #cce5ff;
+            color: #004085;
+        }
+
+        /* MODAL */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            width: 450px;
+            max-width: 90%;
+        }
+
+        .modal-content h3 {
+            margin-bottom: 15px;
+        }
+
+        .modal-content .form-group {
+            margin-bottom: 12px;
+        }
+
+        /* RESPONSIVE */
+        @media(max-width: 900px) {
+            .cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media(max-width: 650px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+
+            .main {
+                margin-left: 0;
+            }
+
+            .cards,
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+
+        <div class="logo">
+            <h2>🌿 B-NUTRITION</h2>
+            <p>Barangay Acevida Nutrition System</p>
+        </div>
+
+        <ul class="menu">
+            <li>
+                <a class="active" onclick="showPage('dashboard', this)">
+                    🏠 Dashboard
+                </a>
+            </li>
+
+            <li>
+                <a onclick="showPage('profiling', this)">
+                    👥 Nutrition Profiling
+                </a>
+            </li>
+
+            <li>
+                <a onclick="showPage('assessment', this)">
+                    ⚖️ Nutritional Assessment
+                </a>
+            </li>
+
+            <li>
+                <a onclick="showPage('monitoring', this)">
+                    📊 Nutrition Monitoring
+                </a>
+            </li>
+
+            <li>
+                <a onclick="showPage('programs', this)">
+                    🍎 Nutrition Programs
+                </a>
+            </li>
+
+            <li>
+                <a onclick="showPage('beneficiaries', this)">
+                    📋 Beneficiaries
+                </a>
+            </li>
+
+            <li>
+                <a onclick="showPage('reports', this)">
+                    📑 Reports
+                </a>
+            </li>
+
+            <li>
+                <a onclick="showPage('users', this)">
+                    👤 User Management
+                </a>
+            </li>
+
+            <li>
+                <a onclick="logout()">
+                    🚪 Logout
+                </a>
+            </li>
+        </ul>
+    </div>
+
+
+    <!-- MAIN CONTENT -->
+    <div class="main">
+
+        <!-- TOPBAR WITH AUTOMATIC DATE AND WEATHER -->
+        <div class="topbar">
+            <h1>Barangay Acevida Nutrition Management System</h1>
+
+            <div class="topbar-info">
+                <div class="info-box" id="currentDate">
+                    Loading date...
+                </div>
+
+                <div class="info-box weather-box" id="weatherBox">
+                    <span class="weather-icon" id="weatherIcon">⏳</span>
+                    <span id="weatherText">Loading weather...</span>
+                </div>
+
+                <div class="user">
+                    👤 Admin: John Euri Andasan
+                </div>
+            </div>
+        </div>
+
+
+        <!-- DASHBOARD -->
+        <section id="dashboard" class="page active">
+
+            <div class="cards">
+                <div class="card">
+                    <h3>Total Registered</h3>
+                    <p id="cardTotal">0</p>
+                </div>
+
+                <div class="card">
+                    <h3>Normal</h3>
+                    <p id="cardNormal">0</p>
+                </div>
+
+                <div class="card">
+                    <h3>Underweight</h3>
+                    <p id="cardUnderweight">0</p>
+                </div>
+
+                <div class="card">
+                    <h3>Stunted / Wasted</h3>
+                    <p id="cardStunted">0</p>
+                </div>
+            </div>
+
+            <div class="box">
+                <h2>Recent Barangay Acevida Nutrition Assessments</h2>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Age</th>
+                            <th>Weight</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dashboardTable">
+                        <!-- Dynamic Content -->
+                    </tbody>
+                </table>
+            </div>
+
+        </section>
+
+
+        <!-- NUTRITION PROFILING -->
+        <section id="profiling" class="page">
+
+            <div class="box">
+                <h2>Barangay Nutrition Profiling</h2>
+
+                <form id="profileForm" onsubmit="saveProfile(event)">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Full Name</label>
+                            <input type="text" id="profName" placeholder="Enter full name" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Birthday</label>
+                            <input type="date" id="profBday" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Sex</label>
+                            <select id="profSex" required>
+                                <option value="">Select Sex</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Age (years)</label>
+                            <input type="number" id="profAge" placeholder="Age" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Barangay Address</label>
+                            <input type="text" id="profAddress" value="Barangay Acevida" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Purok</label>
+                            <input type="text" id="profPurok" placeholder="e.g. Purok 1" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Parent / Guardian</label>
+                            <input type="text" id="profGuardian" placeholder="Parent or guardian" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Contact Number</label>
+                            <input type="text" id="profContact" placeholder="09XXXXXXXXX" required>
+                        </div>
+                    </div>
+
+                    <div class="form-buttons">
+                        <button type="submit">
+                            Save Profile
+                        </button>
+
+                        <button type="button" class="btn-danger" onclick="document.getElementById('profileForm').reset()">
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+        </section>
+
+
+        <!-- NUTRITIONAL ASSESSMENT -->
+        <section id="assessment" class="page">
+
+            <div class="box">
+                <h2>Barangay Nutritional Assessment</h2>
+
+                <form id="assessmentForm" onsubmit="saveAssessment(event)">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Resident / Child Name</label>
+                            <select id="assessResident" required>
+                                <option value="">Select Resident</option>
+                                <!-- Dynamic Options -->
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Assessment Date</label>
+                            <input type="date" id="assessDate" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Weight (kg)</label>
+                            <input type="number" step="0.1" id="assessWeight" placeholder="e.g. 20.5" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Height / Length (cm)</label>
+                            <input type="number" step="0.1" id="assessHeight" placeholder="e.g. 115" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>MUAC (cm)</label>
+                            <input type="number" step="0.1" id="assessMuac" placeholder="e.g. 14.2">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Nutritional Status</label>
+                            <select id="assessStatus" required>
+                                <option value="">Select Status</option>
+                                <option value="Normal">Normal</option>
+                                <option value="Underweight">Underweight</option>
+                                <option value="Wasted">Wasted</option>
+                                <option value="Stunted">Stunted</option>
+                                <option value="Overweight">Overweight</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-buttons">
+                        <button type="submit">
+                            Save Assessment
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+        </section>
+
+
+        <!-- NUTRITION MONITORING -->
+        <section id="monitoring" class="page">
+
+            <div class="box">
+                <h2>Barangay Acevida Nutrition Monitoring</h2>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Name</th>
+                            <th>Weight</th>
+                            <th>Height</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="monitoringTable">
+                        <!-- Dynamic Records -->
+                    </tbody>
+                </table>
+            </div>
+
+        </section>
+
+
+        <!-- NUTRITION PROGRAMS -->
+        <section id="programs" class="page">
+
+            <div class="box">
+                <h2>Barangay Acevida Nutrition Programs</h2>
+
+                <button onclick="openProgramModal()">
+                    + Add Program
+                </button>
+
+                <br><br>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Program</th>
+                            <th>Date</th>
+                            <th>Location</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="programsTable">
+                        <!-- Dynamic Programs -->
+                    </tbody>
+                </table>
+            </div>
+
+        </section>
+
+
+        <!-- BENEFICIARIES -->
+        <section id="beneficiaries" class="page">
+
+            <div class="box">
+                <h2>Barangay Program Beneficiaries</h2>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Age</th>
+                            <th>Purok</th>
+                            <th>Status</th>
+                            <th>Assigned Program</th>
+                        </tr>
+                    </thead>
+                    <tbody id="beneficiariesTable">
+                        <!-- Dynamic Beneficiaries -->
+                    </tbody>
+                </table>
+            </div>
+
+        </section>
+
+
+        <!-- REPORTS -->
+        <section id="reports" class="page">
+
+            <div class="box">
+                <h2>Barangay Reports</h2>
+
+                <br>
+
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <button onclick="generateReport('Status')">
+                        📊 Barangay Nutrition Status Report
+                    </button>
+
+                    <button onclick="generateReport('Beneficiary')">
+                        👥 Barangay Beneficiary Report
+                    </button>
+
+                    <button onclick="generateReport('Monthly')">
+                        📅 Barangay Monthly Summary Report
+                    </button>
+                </div>
+
+                <div id="reportOutput" style="margin-top: 25px; display: none; background: #fafafa; padding: 20px; border: 1px solid #ddd; border-radius: 8px;">
+                    <h3 id="reportTitle" style="margin-bottom: 10px;"></h3>
+                    <div id="reportContent"></div>
+                    <br>
+                    <button class="btn-secondary" onclick="window.print()">🖨️ Print Report</button>
+                </div>
+            </div>
+
+        </section>
+
+
+        <!-- USER MANAGEMENT -->
+        <section id="users" class="page">
+
+            <div class="box">
+                <h2>Barangay User Management</h2>
+
+                <button onclick="openUserModal()">
+                    + Add User
+                </button>
+
+                <br><br>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Username</th>
+                            <th>Role</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersTable">
+                        <!-- Dynamic Users -->
+                    </tbody>
+                </table>
+            </div>
+
+        </section>
+
+    </div>
+
+
+    <!-- MODAL: ADD PROGRAM -->
+    <div class="modal" id="programModal">
+        <div class="modal-content">
+            <h3>Add Barangay Nutrition Program</h3>
+            <form onsubmit="saveProgram(event)">
+                <div class="form-group">
+                    <label>Program Name</label>
+                    <input type="text" id="progName" placeholder="Program Name" required>
+                </div>
+                <div class="form-group">
+                    <label>Date</label>
+                    <input type="date" id="progDate" required>
+                </div>
+                <div class="form-group">
+                    <label>Location</label>
+                    <input type="text" id="progLoc" placeholder="Location" required>
+                </div>
+                <div class="form-group">
+                    <label>Status</label>
+                    <select id="progStatus">
+                        <option value="Active">Active</option>
+                        <option value="Upcoming">Upcoming</option>
+                        <option value="Completed">Completed</option>
+                    </select>
+                </div>
+                <div class="form-buttons">
+                    <button type="submit">Save Program</button>
+                    <button type="button" class="btn-danger" onclick="closeModal('programModal')">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- MODAL: ADD USER -->
+    <div class="modal" id="userModal">
+        <div class="modal-content">
+            <h3>Add Barangay System User</h3>
+            <form onsubmit="saveUser(event)">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="uName" placeholder="Full Name" required>
+                </div>
+                <div class="form-group">
+                    <label>Username / Email</label>
+                    <input type="text" id="uUsername" placeholder="Username or Email" required>
+                </div>
+                <div class="form-group">
+                    <label>Role</label>
+                    <select id="uRole">
+                        <option value="Administrator">Administrator</option>
+                        <option value="BNS (Nutrition Scholar)">BNS (Nutrition Scholar)</option>
+                        <option value="Barangay Health Worker">Barangay Health Worker</option>
+                    </select>
+                </div>
+                <div class="form-buttons">
+                    <button type="submit">Save User</button>
+                    <button type="button" class="btn-danger" onclick="closeModal('userModal')">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <script>
+        /* LOCAL STORAGE DATA MANAGEMENT (Works across sessions and mobile devices when hosted) */
+        let residents = JSON.parse(localStorage.getItem('brgy_residents')) || [
+            { name: "John Euri Andasan", age: 7, weight: 21, height: 115, status: "Normal", purok: "Purok 2", program: "Barangay Nutrition Monitoring" },
+            { name: "John Mavtrick Cuerdo", age: 6, weight: 17, height: 110, status: "Underweight", purok: "Purok 1", program: "Barangay Feeding Program" },
+            { name: "Angeline Cruz", age: 8, weight: 19, height: 112, status: "Stunted", purok: "Purok 3", program: "Barangay Nutrition Monitoring" },
+            { name: "Mycah Castillo", age: 7, weight: 22, height: 118, status: "Normal", purok: "Purok 4", program: "Barangay Feeding Program" }
+        ];
+
+        let monitoringLogs = JSON.parse(localStorage.getItem('brgy_logs')) || [
+            { date: "2026-10-01", name: "John Euri Andasan", weight: "20 kg", height: "115 cm", status: "Underweight" },
+            { date: "2026-10-20", name: "John Euri Andasan", weight: "21 kg", height: "115 cm", status: "Normal" },
+            { date: "2026-10-20", name: "John Mavtrick Cuerdo", weight: "17 kg", height: "110 cm", status: "Underweight" },
+            { date: "2026-10-20", name: "Angeline Cruz", weight: "19 kg", height: "112 cm", status: "Stunted" },
+            { date: "2026-10-20", name: "Mycah Castillo", weight: "22 kg", height: "118 cm", status: "Normal" }
+        ];
+
+        let programs = JSON.parse(localStorage.getItem('brgy_programs')) || [
+            { name: "Barangay Feeding Program", date: "2026-10-30", location: "Barangay Covered Court", status: "Active" },
+            { name: "Barangay Nutrition Education", date: "2026-11-05", location: "Function Hall", status: "Upcoming" }
+        ];
+
+        let users = JSON.parse(localStorage.getItem('brgy_users')) || [
+            { name: "John Euri Andasan", username: "ajohneuri@gmail.com", role: "Administrator", status: "Active" },
+            { name: "Barangay Nutrition Scholar", username: "bns_acevida", role: "BNS", status: "Active" }
+        ];
+
+        function saveData() {
+            localStorage.setItem('brgy_residents', JSON.stringify(residents));
+            localStorage.setItem('brgy_logs', JSON.stringify(monitoringLogs));
+            localStorage.setItem('brgy_programs', JSON.stringify(programs));
+            localStorage.setItem('brgy_users', JSON.stringify(users));
+        }
+
+        /* RENDER ALL TABLES & DASHBOARD */
+        function renderAll() {
+            renderDashboard();
+            renderAssessmentDropdown();
+            renderMonitoring();
+            renderPrograms();
+            renderBeneficiaries();
+            renderUsers();
+        }
+
+        /* 1. DASHBOARD RENDER */
+        function renderDashboard() {
+            const total = residents.length;
+            const normal = residents.filter(r => r.status === "Normal").length;
+            const underweight = residents.filter(r => r.status === "Underweight").length;
+            const stunted = residents.filter(r => r.status === "Stunted" || r.status === "Wasted").length;
+
+            document.getElementById("cardTotal").textContent = total;
+            document.getElementById("cardNormal").textContent = normal;
+            document.getElementById("cardUnderweight").textContent = underweight;
+            document.getElementById("cardStunted").textContent = stunted;
+
+            const tableBody = document.getElementById("dashboardTable");
+            tableBody.innerHTML = "";
+            residents.forEach(r => {
+                tableBody.innerHTML += `
+                    <tr>
+                        <td>${r.name}</td>
+                        <td>${r.age}</td>
+                        <td>${r.weight} kg</td>
+                        <td><span class="status ${r.status.toLowerCase()}">${r.status}</span></td>
+                    </tr>
+                `;
+            });
+        }
+
+        /* 2. PROFILING FUNCTION */
+        function saveProfile(event) {
+            event.preventDefault();
+            const name = document.getElementById("profName").value.trim();
+            const age = parseInt(document.getElementById("profAge").value);
+            const purok = document.getElementById("profPurok").value.trim();
+
+            residents.push({
+                name: name,
+                age: age,
+                weight: 0,
+                height: 0,
+                status: "Normal",
+                purok: purok,
+                program: "Pending Assessment"
+            });
+
+            saveData();
+            alert(Resident "${name}" has been successfully registered!);
+            document.getElementById("profileForm").reset();
+            renderAll();
+            showPage('assessment', document.querySelectorAll('.menu a')[2]);
+        }
+
+        /* 3. ASSESSMENT FUNCTIONS */
+        function renderAssessmentDropdown() {
+            const select = document.getElementById("assessResident");
+            select.innerHTML = '<option value="">Select Resident</option>';
+            residents.forEach(r => {
+                select.innerHTML += <option value="${r.name}">${r.name}</option>;
+            });
+        }
+
+        function saveAssessment(event) {
+            event.preventDefault();
+            const name = document.getElementById("assessResident").value;
+            const date = document.getElementById("assessDate").value;
+            const weight = parseFloat(document.getElementById("assessWeight").value);
+            const height = parseFloat(document.getElementById("assessHeight").value);
+            const status = document.getElementById("assessStatus").value;
+
+            let res = residents.find(r => r.name === name);
+            if (res) {
+                res.weight = weight;
+                res.height = height;
+                res.status = status;
+                if(status === "Underweight" || status === "Wasted") {
+                    res.program = "Barangay Feeding Program";
+                } else if(status === "Stunted") {
+                    res.program = "Barangay Nutrition Monitoring";
+                }
+            }
+
+            monitoringLogs.unshift({
+                date: date,
+                name: name,
+                weight: weight + " kg",
+                height: height + " cm",
+                status: status
+            });
+
+            saveData();
+            alert(Nutritional Assessment saved for ${name}!);
+            document.getElementById("assessmentForm").reset();
+            renderAll();
+            showPage('monitoring', document.querySelectorAll('.menu a')[3]);
+        }
+
+        /* 4. MONITORING RENDER */
+        function renderMonitoring() {
+            const tableBody = document.getElementById("monitoringTable");
+            tableBody.innerHTML = "";
+            monitoringLogs.forEach(m => {
+                tableBody.innerHTML += `
+                    <tr>
+                        <td>${m.date}</td>
+                        <td>${m.name}</td>
+                        <td>${m.weight}</td>
+                        <td>${m.height}</td>
+                        <td><span class="status ${m.status.toLowerCase()}">${m.status}</span></td>
+                    </tr>
+                `;
+            });
+        }
+
+        /* 5. PROGRAM FUNCTIONS */
+        function renderPrograms() {
+            const tableBody = document.getElementById("programsTable");
+            tableBody.innerHTML = "";
+            programs.forEach(p => {
+                tableBody.innerHTML += `
+                    <tr>
+                        <td>${p.name}</td>
+                        <td>${p.date}</td>
+                        <td>${p.location}</td>
+                        <td><strong>${p.status}</strong></td>
+                    </tr>
+                `;
+            });
+        }
+
+        function openProgramModal() {
+            document.getElementById("programModal").style.display = "flex";
+        }
+
+        function saveProgram(event) {
+            event.preventDefault();
+            programs.push({
+                name: document.getElementById("progName").value,
+                date: document.getElementById("progDate").value,
+                location: document.getElementById("progLoc").value,
+                status: document.getElementById("progStatus").value
+            });
+            saveData();
+            alert("New Nutrition Program Added!");
+            closeModal("programModal");
+            renderPrograms();
+        }
+
+        /* 6. BENEFICIARIES RENDER */
+        function renderBeneficiaries() {
+            const tableBody = document.getElementById("beneficiariesTable");
+            tableBody.innerHTML = "";
+            residents.forEach(r => {
+                tableBody.innerHTML += `
+                    <tr>
+                        <td>${r.name}</td>
+                        <td>${r.age}</td>
+                        <td>${r.purok}</td>
+                        <td><span class="status ${r.status.toLowerCase()}">${r.status}</span></td>
+                        <td>${r.program}</td>
+                    </tr>
+                `;
+            });
+        }
+
+        /* 7. REPORTS GENERATOR */
+        function generateReport(type) {
+            const output = document.getElementById("reportOutput");
+            const title = document.getElementById("reportTitle");
+            const content = document.getElementById("reportContent");
+
+            output.style.display = "block";
+
+            if (type === 'Status') {
+                title.textContent = "📊 Barangay Acevida Overall Nutrition Status Report";
+                content.innerHTML = `
+                    <p><strong>Total Population Assessed:</strong> ${residents.length}</p>
+                    <p><strong>Normal Status:</strong> ${residents.filter(r => r.status === 'Normal').length}</p>
+                    <p><strong>Underweight:</strong> ${residents.filter(r => r.status === 'Underweight').length}</p>
+                    <p><strong>Stunted / Wasted:</strong> ${residents.filter(r => r.status === 'Stunted' || r.status === 'Wasted').length}</p>
+                `;
+            } else if (type === 'Beneficiary') {
+                title.textContent = "👥 Barangay Program Beneficiary List";
+                let list = "<ol>";
+                residents.forEach(r => {
+                    list += <li><strong>${r.name}</strong> (${r.purok}) - ${r.status} [Program: ${r.program}]</li>;
+                });
+                list += "</ol>";
+                content.innerHTML = list;
+            } else if (type === 'Monthly') {
+                title.textContent = "📅 Monthly Barangay Nutrition Summary";
+                content.innerHTML = `
+                    <p><strong>Active Programs:</strong> ${programs.length}</p>
+                    <p><strong>Total Assessments Conducted:</strong> ${monitoringLogs.length}</p>
+                    <p><strong>System Administrator:</strong> John Euri Andasan (ajohneuri@gmail.com)</p>
+                `;
+            }
+        }
+
+        /* 8. USER MANAGEMENT FUNCTIONS */
+        function renderUsers() {
+            const tableBody = document.getElementById("usersTable");
+            tableBody.innerHTML = "";
+            users.forEach(u => {
+                tableBody.innerHTML += `
+                    <tr>
+                        <td>${u.name}</td>
+                        <td>${u.username}</td>
+                        <td>${u.role}</td>
+                        <td><span class="status normal">${u.status}</span></td>
+                    </tr>
+                `;
+            });
+        }
+
+        function openUserModal() {
+            document.getElementById("userModal").style.display = "flex";
+        }
+
+        function saveUser(event) {
+            event.preventDefault();
+            users.push({
+                name: document.getElementById("uName").value,
+                username: document.getElementById("uUsername").value,
+                role: document.getElementById("uRole").value,
+                status: "Active"
+            });
+            saveData();
+            alert("New System User Added!");
+            closeModal("userModal");
+            renderUsers();
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).style.display = "none";
+        }
+
+
+        /* AUTOMATIC DATE AND TIME */
+        function updateDateTime() {
+            const now = new Date();
+            const dateText = now.toLocaleDateString("en-PH", {
+                weekday: "long",
+                year: "numeric",
+                month: "long",
+                day: "numeric"
+            });
+            const timeText = now.toLocaleTimeString("en-PH", {
+                hour: "2-digit",
+                minute: "2-digit",
+                second: "2-digit"
+            });
+            document.getElementById("currentDate").textContent = dateText + " | " + timeText;
+        }
+        updateDateTime();
+        setInterval(updateDateTime, 1000);
+
+
+        /* AUTOMATIC WEATHER CONDITION */
+        const BARANGAY_LATITUDE = 14.5995;
+        const BARANGAY_LONGITUDE = 120.9842;
+
+        function getWeatherCondition(code) {
+            if (code === 0) return { text: "Clear Sky", icon: "☀️" };
+            if (code === 1 || code === 2) return { text: "Partly Cloudy", icon: "⛅" };
+            if (code === 3) return { text: "Cloudy", icon: "☁️" };
+            if (code >= 51 && code <= 67) return { text: "Rainy", icon: "🌧️" };
+            if (code === 95 || code === 96 || code === 99) return { text: "Thunderstorm", icon: "⛈️" };
+            return { text: "Clear", icon: "🌤️" };
+        }
+
+        async function loadWeather() {
+            const weatherText = document.getElementById("weatherText");
+            const weatherIcon = document.getElementById("weatherIcon");
+
+            try {
+                const url = https://api.open-meteo.com/v1/forecast?latitude=${BARANGAY_LATITUDE}&longitude=${BARANGAY_LONGITUDE}&current=temperature_2m,weather_code&timezone=auto;
+                const response = await fetch(url);
+                const data = await response.json();
+                const temperature = Math.round(data.current.temperature_2m);
+                const weather = getWeatherCondition(data.current.weather_code);
+
+                weatherIcon.textContent = weather.icon;
+                weatherText.textContent = ${weather.text} | ${temperature}°C;
+            } catch (error) {
+                weatherIcon.textContent = "🌤️";
+                weatherText.textContent = "29°C | Clear";
+            }
+        }
+        loadWeather();
+        setInterval(loadWeather, 10 * 60 * 1000);
+
+
+        /* PAGE NAVIGATION */
+        function showPage(pageId, element) {
+            document.querySelectorAll(".page").forEach(page => {
+                page.classList.remove("active");
+            });
+            document.getElementById(pageId).classList.add("active");
+
+            document.querySelectorAll(".menu a").forEach(link => {
+                link.classList.remove("active");
+            });
+            if (element) {
+                element.classList.add("active");
+            }
+        }
+
+        function logout() {
+            if (confirm("Are you sure you want to logout?")) {
+                alert("You have been logged out.");
+            }
+        }
+
+        // INITIAL LOAD
+        window.onload = function() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById("assessDate").value = today;
+            document.getElementById("progDate").value = today;
+            renderAll();
+        };
+    </script>
+
+</body>
+</html>
